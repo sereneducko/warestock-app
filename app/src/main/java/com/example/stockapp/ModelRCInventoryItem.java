@@ -4,11 +4,11 @@ class ModelRCInventoryItem {
     String imageUrl;
     String productName;
     String productCategory;
-    int quantity;
+    String quantity;
     String barcode;
-    long productPrice;
+    String productPrice;
 
-    public ModelRCInventoryItem(String imageUrl, String productName, String productCategory, int quantity, String barcode, long productPrice) {
+    public ModelRCInventoryItem(String imageUrl, String productName, String productCategory, String quantity, String barcode, String productPrice) {
         this.imageUrl = imageUrl;
         this.productName = productName;
         this.productCategory = productCategory;
@@ -29,7 +29,7 @@ class ModelRCInventoryItem {
         return productCategory;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
@@ -37,7 +37,7 @@ class ModelRCInventoryItem {
         return barcode;
     }
 
-    public long getProductPrice() {
+    public String getProductPrice() {
         return productPrice;
     }
 }

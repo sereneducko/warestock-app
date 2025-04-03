@@ -9,4 +9,20 @@ public class LinkResponse {
     private String prev;
 
     private String next;
+
+    public String getFirst() {
+        return first;
+    }
+
+    public String getLast() {
+        return last;
+    }
+
+    public String getPrev() {
+        return prev;
+    }
+
+    public String getNext() {
+        return next;
+    }
 }

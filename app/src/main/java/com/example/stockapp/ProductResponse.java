@@ -15,7 +15,9 @@ public class ProductResponse {
     private String barcode;
     private String description;
     private int lowAmountThreshold;
-    private long productPrice;
+    @SerializedName("price")
+    private String productPrice;
+
     public String getName() {
         return name;
     }
@@ -52,7 +54,7 @@ public class ProductResponse {
         return lowAmountThreshold;
     }
 
-    public long getProductPrice() {
+    public String getProductPrice() {
         return productPrice;
     }
 }
