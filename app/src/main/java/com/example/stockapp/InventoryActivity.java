@@ -26,7 +26,6 @@ public class InventoryActivity extends AppCompatActivity {
     private PaginationResponse paginationResponse;
     private ArrayList<ProductResponse> productList = new ArrayList<>();
     private int currentPage = 1;
-    private int perPage = 10;
     private int lastPage = 1;
     private boolean isLoading = false;
     ArrayList<ModelRCInventoryItem> inventoryItemRCModelList = new ArrayList<>();
@@ -34,6 +33,12 @@ public class InventoryActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     TextView errorTextView;
     LinearLayout buttonBar;
+
+    LinearLayout navigationButtonBar;
+
+    //pagination variable
+    int visiblePageCount = 5;
+    int halfVisible = visiblePageCount / 2;
 
 
     @Override
@@ -54,11 +59,18 @@ public class InventoryActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         buttonBar = findViewById(R.id.inventory_pageButtonBar);
+        navigationButtonBar = findViewById(R.id.inventory_pageNavButtonBar);
 
         getInventory(null);
     }
 
+    private void getInventory(int pageNumber) {
+        currentPage = pageNumber;
+        getInventory(null);
+    }
+
     private void getInventory(String url) {
+        int perPage = 10;
         Call<PaginationResponse> call = null;
 
         if (isLoading || currentPage > lastPage) {
@@ -80,11 +92,13 @@ public class InventoryActivity extends AppCompatActivity {
                     paginationResponse = response.body();
                     currentPage = paginationResponse.getMeta().getCurrent_page();
                     lastPage = paginationResponse.getMeta().getLast_page();
-                    productList.addAll(paginationResponse.data);
-                    recyclerView.removeAllViews();
+
                     setUpInventoryItemModel();
-                    logInventoryItems();
-                    adapter.notifyItemInserted(0);
+                    adapter.notifyDataSetChanged();
+//                    logInventoryItems();
+
+                    recyclerView.setHasFixedSize(true);// Optional but good practice
+                    recyclerView.scrollToPosition(0);
                     generatePageButton();
                 } else {
                     Log.e("InventoryActivity", "API call failed. Response code: " + response.code());
@@ -99,6 +113,9 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void setUpInventoryItemModel() {
+
+        productList.clear();
+        productList.addAll(paginationResponse.data);
         inventoryItemRCModelList.clear();
         for (ProductResponse product : productList) {
             inventoryItemRCModelList.add(new ModelRCInventoryItem(
@@ -113,57 +130,129 @@ public class InventoryActivity extends AppCompatActivity {
     }
 
     private void generatePageButton(){
-        if (buttonBar != null) {
+
+        MetaResponse metaData = paginationResponse.getMeta();
+        LinkResponse linkData = paginationResponse.getLinks();
+
+        final int firstPage = 1;
+
+        if (buttonBar != null && navigationButtonBar !=null) {
             buttonBar.removeAllViews();
+            navigationButtonBar.removeAllViews();
         }
 
-//        Button prevButton = new Button(this);
-//        prevButton.setText("Prev");
-//        prevButton.setEnabled(currentPage>1);
-//        prevButton.setOnClickListener(v -> {
-//            currentPage--;
-//            getInventory(paginationResponse.getLinks().getPrev());
-//            generatePageButton();
-//        });
-//        buttonBar.addView(prevButton);
-//
-//        Button nextButton = new Button(this);
-//        nextButton.setText("Next");
-//        prevButton.setOnClickListener(v -> {
-//            currentPage++;
-//            getInventory(paginationResponse.getLinks().getPrev());
-//            generatePageButton();
-//        });
-//        buttonBar.addView(nextButton);
+        generateNavigationButton(
+                "<",
+                currentPage>1,
+                v -> {
+                    currentPage--;
+                    getInventory(linkData.getPrev());
+                },
+                navigationButtonBar
+        );
 
-        for (int i = 1; i < paginationResponse.getMeta().getLast_page() - 1; i++) {
-            final int pageNumber = i;
-            if (paginationResponse.getMeta().getLinks().get(i).getLabel() == null) {
+        generateNavigationButton(
+                "1",
+                true,
+                v -> {
+                    currentPage = 1;
+                    getInventory(linkData.getFirst());
+                },
+                buttonBar
+        );
+
+        if (firstPage + (halfVisible) < currentPage) {
+            generateEllipsis();
+        }
+
+        numberedButton(currentPage);
+
+        if (lastPage - (halfVisible) > currentPage) {
+            generateEllipsis();
+        }
+
+        generateNavigationButton(
+                String.valueOf(metaData.getLast_page()),
+                true,
+                v -> {
+                    currentPage = lastPage;
+                    getInventory(linkData.getLast());
+                },
+                buttonBar
+        );
+
+        generateNavigationButton(
+                ">",
+                currentPage < lastPage,
+                v -> {
+                    currentPage++;
+                    getInventory(linkData.getNext());
+                },
+                navigationButtonBar
+        );
+
+    }
+
+    private void numberedButton(int currentPage) {
+        int centerIndex = currentPage;
+
+        for (int i = centerIndex - halfVisible; i <= centerIndex + halfVisible; i++) {
+            final int indexNumber = i;
+            if (i <= 1 || i >= lastPage) {
                 continue;
             }
+
             Button number = new Button(this);
-            number.setText(paginationResponse.getMeta().getLinks().get(pageNumber).getLabel());
+            number.setText(String.valueOf(i));
             number.setOnClickListener(v -> {
-                currentPage = pageNumber;
-                getInventory(paginationResponse.getMeta().getLinks().get(pageNumber).getUrl());
-
+                getInventory(indexNumber);
             });
-            buttonBar.addView(number);
+            addAndSpaceButton(number, buttonBar);
         }
-
     }
 
-    private void logInventoryItems() {
-        Log.d("InventoryActivity", "Inventory Item List Contents:");
-        for (ModelRCInventoryItem item : inventoryItemRCModelList) {
-            Log.d("InventoryActivity", "Item: " +
-                    "Image URL: " + item.getImageUrl() + ", " +
-                    "Name: " + item.getProductName() + ", " +
-                    "Category: " + item.getProductCategory() + ", " +
-                    "Quantity: " + item.getQuantity() + ", " +
-                    "Barcode: " + item.getBarcode() + ", " +
-                    "Price: " + item.getProductPrice());
-        }
-        Log.d("InventoryActivity", "LastPage: " + paginationResponse.getMeta().getLast_page());
+    private void generateEllipsis() {
+        Button ellipsis = new Button(this);
+        ellipsis.setText("...");
+        addAndSpaceButton(ellipsis, buttonBar);
     }
+
+    private void generateNavigationButton (String text, boolean condition, View.OnClickListener listener, LinearLayout view) {
+        Button navButton = new Button(this);
+        navButton.setText(text);
+        navButton.setEnabled(condition);
+        navButton.setOnClickListener(listener);
+        addAndSpaceButton(navButton, view);
+    }
+
+    private void addAndSpaceButton(Button button, LinearLayout view){
+
+        button.setSingleLine(true);
+        button.setMinEms(2);
+        button.setTextSize(12);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1.0f
+        );
+        button.setLayoutParams(params);
+
+        view.addView(button);
+    }
+
+//    private void logInventoryItems() {
+//        Log.d("InventoryActivity", "Inventory Item List Contents:");
+//        for (ModelRCInventoryItem item : inventoryItemRCModelList) {
+//            Log.d("InventoryActivity", "Item: " +
+//                    "Image URL: " + item.getImageUrl() + ", " +
+//                    "Name: " + item.getProductName() + ", " +
+//                    "Category: " + item.getProductCategory() + ", " +
+//                    "Quantity: " + item.getQuantity() + ", " +
+//                    "Barcode: " + item.getBarcode() + ", " +
+//                    "Price: " + item.getProductPrice());
+//        }
+//        Log.d("InventoryActivity", "LastPage: " + paginationResponse.getMeta().getLast_page());
+//        Log.d("InventoryActivity", "CurrentPage: " + currentPage);
+//
+//    }
 }
