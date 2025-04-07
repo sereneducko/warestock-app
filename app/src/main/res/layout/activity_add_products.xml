@@ -1,6 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/grey">
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_marginHorizontal="20dp">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/add_inventory_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="00000000"
+                android:layout_marginStart="0dp"
+                app:contentInsetStart="0dp"
+                >
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/icon_back_action"
+                    android:background="@drawable/rounded_background"
+                    android:padding="14dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Items"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:fontFamily="@font/onest_bold"
+                    android:textSize="24sp"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="TODO"
+                    android:src="@drawable/baseline_more_vert_24"
+                    android:background="@drawable/rounded_background"
+                    android:padding="14dp"
+                    android:layout_gravity="end"
+                    />
+            </androidx.appcompat.widget.Toolbar>
+
+            <FrameLayout
+                android:id="@+id/add_inventory_uploadImage"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/dotted_border"
+                android:layout_marginVertical="16dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_upload_file_24"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/onest"
+                        android:text="Upload Images"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginStart="4dp"/>
+                </LinearLayout>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/add_inventory_itemName_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Item Name"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/onest_bold"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_uploadImage"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <EditText
+                android:id="@+id/add_inventory_itemName_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_itemName_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:hint="Item name"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_background"
+                android:paddingVertical="12dp"
+                android:paddingStart="10dp"/>
+
+            <TextView
+                android:id="@+id/add_inventory_sku_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SKU"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/onest_bold"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_itemName_field"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <EditText
+                android:id="@+id/add_inventory_sku_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_sku_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:hint="SKU"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_background"
+                android:paddingVertical="12dp"
+                android:paddingStart="10dp"/>
+
+            <TextView
+                android:id="@+id/add_inventory_unit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unit"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/onest_bold"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_sku_field"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <EditText
+                android:id="@+id/add_inventory_unit_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_unit_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:hint="Unit"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_background"
+                android:paddingVertical="12dp"
+                android:paddingStart="10dp"/>
+
+            <LinearLayout
+                android:id="@+id/add_inventory_category_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_unit_field"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/add_inventory_category_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/onest_bold"
+                    app:layout_constraintTop_toBottomOf="@id/add_inventory_unit_field"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:hint="Category"
+                    >
+
+                    <AutoCompleteTextView
+                        android:id="@+id/add_inventory_category_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_background"
+                        android:inputType="text"
+                        android:completionThreshold="1"
+                        android:textSize="16sp"
+                        android:hint="Select or add a category"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="10dp"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/add_inventory_barcode_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Barcode"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/onest_bold"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_category_container"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <LinearLayout
+                android:id="@+id/add_inventory_barcode_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_barcode_text"
+                android:weightSum="1"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/add_inventory_barcode_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.85"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:hint="Barcode"
+                    android:textSize="16sp"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/rounded_background"
+                    android:paddingVertical="12dp"
+                    android:layout_gravity="center"
+                    android:paddingStart="10dp"
+                    android:layout_marginEnd="5dp"/>
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.15"
+                    android:layout_marginTop="1dp"
+                    android:paddingVertical="10dp"
+                    android:src="@drawable/baseline_qr_code_scanner_24"
+                    android:background="@drawable/rounded_background"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/add_inventory_description_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/onest_bold"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_barcode_container"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <EditText
+                android:id="@+id/add_inventory_description_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_description_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:hint="Description"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_background"
+                android:paddingVertical="12dp"
+                android:paddingStart="10dp"/>
+
+            <TextView
+                android:id="@+id/add_inventory_threshold_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Low Amount Threshold"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/onest_bold"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_description_field"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <EditText
+                android:id="@+id/add_inventory_threshold_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_threshold_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:hint="Low Amount Threshold"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_background"
+                android:paddingVertical="12dp"
+                android:paddingStart="10dp"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                app:layout_constraintTop_toBottomOf="@id/add_inventory_threshold_field"
+                android:hint="Save"
+                android:textSize="16sp"
+                android:textColorHint="@color/white"
+                android:backgroundTint="@color/blue"
+
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

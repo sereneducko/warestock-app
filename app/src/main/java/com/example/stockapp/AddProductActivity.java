@@ -1,4 +1,10 @@
 package com.example.stockapp;
 
-public class AddProductActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class AddProductActivity extends AppCompatActivity {
+
+
+
+
 }

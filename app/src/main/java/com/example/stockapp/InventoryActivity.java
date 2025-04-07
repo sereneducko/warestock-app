@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,14 +23,14 @@ import retrofit2.Response;
 public class InventoryActivity extends AppCompatActivity {
 
     private PaginationResponse paginationResponse;
-    private ArrayList<ProductResponse> productList = new ArrayList<>();
+    final private ArrayList<ProductResponse> productList = new ArrayList<>();
     private int currentPage = 1;
     private int lastPage = 1;
     private boolean isLoading = false;
     ArrayList<ModelRCInventoryItem> inventoryItemRCModelList = new ArrayList<>();
     II_RecyclerViewAdapter adapter;
     RecyclerView recyclerView;
-    TextView errorTextView;
+//    TextView errorTextView;
     LinearLayout buttonBar;
 
     LinearLayout navigationButtonBar;
@@ -71,7 +70,7 @@ public class InventoryActivity extends AppCompatActivity {
 
     private void getInventory(String url) {
         int perPage = 10;
-        Call<PaginationResponse> call = null;
+        Call<PaginationResponse> call;
 
         if (isLoading || currentPage > lastPage) {
             return;
@@ -94,7 +93,7 @@ public class InventoryActivity extends AppCompatActivity {
                     lastPage = paginationResponse.getMeta().getLast_page();
 
                     setUpInventoryItemModel();
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyItemInserted(0);
 //                    logInventoryItems();
 
                     recyclerView.setHasFixedSize(true);// Optional but good practice
@@ -204,9 +203,7 @@ public class InventoryActivity extends AppCompatActivity {
 
             Button number = new Button(this);
             number.setText(String.valueOf(i));
-            number.setOnClickListener(v -> {
-                getInventory(indexNumber);
-            });
+            number.setOnClickListener(v -> getInventory(indexNumber));
             addAndSpaceButton(number, buttonBar);
         }
     }
