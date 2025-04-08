@@ -14,6 +14,7 @@ public interface StockAppService {
     @GET
     Call<PaginationResponse> getItemsByUrl(@Url String url);
 
+    // TODO: 07/04/2025 add a store api
 //    @POST("product")
 //    Call<>
 
