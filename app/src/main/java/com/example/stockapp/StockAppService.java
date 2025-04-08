@@ -1,8 +1,8 @@
 package com.example.stockapp;
 
-import java.util.List;
-
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -15,7 +15,17 @@ public interface StockAppService {
     Call<PaginationResponse> getItemsByUrl(@Url String url);
 
     // TODO: 07/04/2025 add a store api
-//    @POST("product")
-//    Call<>
+
+    @POST("products")
+    Call<ProductResponse> postProduct (@Body ProductRequest productRequest);
+
+
+    //categories api
+
+    @GET("categories")
+    Call<CategoryListResponse> getCategories();
+
+    @POST("categories")
+    Call<CategoryResponse> postCategory (@Field("name") String name);
 
 }
