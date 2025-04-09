@@ -3,6 +3,5 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/onest</item>
         <item>@font/onest_bold</item>
-        <item>@font/onest_thin</item>
     </array>
 </resources>

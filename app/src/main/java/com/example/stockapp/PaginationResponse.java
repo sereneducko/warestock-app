@@ -7,6 +7,7 @@ public class PaginationResponse {
     public List<ProductResponse> data;
     public LinkResponse links;
     public MetaResponse meta;
+    public CategoryResponse categories;
 
     public List<ProductResponse> getData() {
         return data;
@@ -19,4 +20,6 @@ public class PaginationResponse {
     public MetaResponse getMeta() {
         return meta;
     }
+
+    public CategoryResponse getCategories() {return categories;}
 }

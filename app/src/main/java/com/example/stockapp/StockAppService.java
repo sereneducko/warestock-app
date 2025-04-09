@@ -26,6 +26,6 @@ public interface StockAppService {
     Call<CategoryListResponse> getCategories();
 
     @POST("categories")
-    Call<CategoryResponse> postCategory (@Field("name") String name);
+    Call<WrapperCategoryResponse> postCategory (@Field("name") String name);
 
 }

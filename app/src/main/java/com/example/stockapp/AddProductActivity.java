@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,13 +41,14 @@ public class AddProductActivity extends AppCompatActivity {
     Button submitButton;
     int price;
     int number;
+    int categoryId;
     CategoryListResponse categoryListResponse;
     final ArrayList<CategoryResponse> categoryResponseArrayList = new ArrayList<>();
     ArrayList<Category> categories = new ArrayList<>();
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_products);
@@ -63,13 +65,12 @@ public class AddProductActivity extends AppCompatActivity {
         productBarcode = findViewById(R.id.add_inventory_barcode_field);
         productDescription = findViewById(R.id.add_inventory_description_field);
         productThreshold = findViewById(R.id.add_inventory_threshold_field);
-        number = Integer.parseInt(productThreshold.getText().toString());
         submitButton = findViewById(R.id.add_inventory_submit_button);
         price = 50000;
 
         setUpCategoryData();
 
-        submitButton.setOnClickListener(v-> submitData());
+        submitButton.setOnClickListener(v-> checkCategoryAndSubmit());
 
         // bind all the view with a input
         // validate (if possible)
@@ -86,18 +87,23 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<CategoryListResponse> call, Response<CategoryListResponse> response) {
                 if (response.isSuccessful()) {
-                    categoryListResponse = response.body();
-                    categoryResponseArrayList.addAll(categoryListResponse.getCategories());
+                    Log.d("999", "Categories:" + response.body().toString());
+                    for (CategoryResponse category : response.body().getCategories()) {
 
-                    for (CategoryResponse category : categoryResponseArrayList) {
                         categories.add(new Category(category.getCategoryId(), category.getCategoryName()));
                     }
 
+
+
                     ArrayAdapter<Category> adapter = new ArrayAdapter<>(
-                            this,
+                            AddProductActivity.this,
                             android.R.layout.simple_dropdown_item_1line,
                             categories
                     );
+
+                    productCategory.setAdapter(adapter);
+                    productCategory.setThreshold(1);
+
 
 
                 } else {
@@ -110,20 +116,58 @@ public class AddProductActivity extends AppCompatActivity {
                 Log.e("AddProductActivity", "API call failed.", t);
             }
         });
+    };
+
+    public void checkCategoryAndSubmit() {
+        String categoryInput = productCategory.getText().toString();
+        boolean found = false;
+
+        for (Category category : categories) {
+            if (categoryInput.equalsIgnoreCase(category.getName())) {
+                categoryId = category.getId();
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) {
+            Call<WrapperCategoryResponse> call = ApiClient.getInstance().postCategory(categoryInput);
+
+            call.enqueue(new Callback<WrapperCategoryResponse>() {
+                @Override
+                public void onResponse(Call<WrapperCategoryResponse> call, Response<WrapperCategoryResponse> response) {
+                    if (response.isSuccessful()) {
+                        categoryId = response.body().getData().getCategoryId();
+                        submitData(categoryId);
+                    } else {
+                        Log.e("AddProductActivity", "API call failed. Response code: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<WrapperCategoryResponse> call, Throwable t) {
+                    Log.e("AddProductActivity", "Category post failed.", t);
+                }
+
+            });
+        } else {
+            submitData(categoryId);
+        }
+
     }
 
-    public void submitData(){
+    public void submitData(int Id) {
 
         ProductRequest newProduct = new ProductRequest(
                 productName.getText().toString(),
                 productSku.getText().toString(),
                 productImageUrl,
                 productUnit.getText().toString(),
-                productCategory.getText().toString(),
+                Id,
                 productBarcode.getText().toString(),
                 productDescription.getText().toString(),
                 // TODO: 08/04/2025 replace the number and price with data from the batches
-                number,
+                number = Integer.parseInt(productThreshold.getText().toString()),
                 price
         );
 
@@ -134,7 +178,7 @@ public class AddProductActivity extends AppCompatActivity {
         call.enqueue(new Callback<ProductResponse>() {
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
 
                     Intent intent = new Intent(AddProductActivity.this, InventoryActivity.class);
 
@@ -155,3 +199,5 @@ public class AddProductActivity extends AppCompatActivity {
         });
     }
 }
+
+

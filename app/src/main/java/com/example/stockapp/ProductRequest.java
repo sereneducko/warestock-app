@@ -6,13 +6,13 @@ public class ProductRequest {
     String sku;
     String imageUrl;
     String unit;
-    String category;
+    int category;
     String barcode;
     String description;
     int threshold;
     int price;
 
-    public ProductRequest(String name, String sku, String imageUrl, String unit, String category, String barcode, String description, int threshold, int price) {
+    public ProductRequest(String name, String sku, String imageUrl, String unit, int category, String barcode, String description, int threshold, int price) {
         this.name = name;
         this.sku = sku;
         this.imageUrl = imageUrl;
