@@ -9,8 +9,8 @@ public class ProductRequest {
     int category;
     String barcode;
     String description;
-    int threshold;
-    int price;
+    Integer threshold;
+    Integer price;
 
     public ProductRequest(String name, String sku, String imageUrl, String unit, int category, String barcode, String description, int threshold, int price) {
         this.name = name;

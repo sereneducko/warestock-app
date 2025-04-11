@@ -35,7 +35,7 @@ public class AddProductActivity extends AppCompatActivity {
     // TODO: 08/04/2025 process image url adding
     AutoCompleteTextView productCategory;
     EditText productBarcode;
-    // TODO: 08/04/2025 add barcode
+    // TODO: 08/04/2025 add barcode reading capability
     EditText productDescription;
     EditText productThreshold;
     Button submitButton;
@@ -89,11 +89,8 @@ public class AddProductActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Log.d("999", "Categories:" + response.body().toString());
                     for (CategoryResponse category : response.body().getCategories()) {
-
                         categories.add(new Category(category.getCategoryId(), category.getCategoryName()));
                     }
-
-
 
                     ArrayAdapter<Category> adapter = new ArrayAdapter<>(
                             AddProductActivity.this,
@@ -103,8 +100,6 @@ public class AddProductActivity extends AppCompatActivity {
 
                     productCategory.setAdapter(adapter);
                     productCategory.setThreshold(1);
-
-
 
                 } else {
                     Log.e("AddProductActivity", "API call failed. Response code: " + response.code());

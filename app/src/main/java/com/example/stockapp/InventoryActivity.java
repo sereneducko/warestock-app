@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 public class InventoryActivity extends AppCompatActivity {
 
-    private PaginationResponse paginationResponse;
+    private ProductPaginationResponse paginationResponse;
     final private ArrayList<ProductResponse> productList = new ArrayList<>();
     private int currentPage = 1;
     private int lastPage = 1;
@@ -70,7 +70,7 @@ public class InventoryActivity extends AppCompatActivity {
 
     private void getInventory(String url) {
         int perPage = 10;
-        Call<PaginationResponse> call;
+        Call<ProductPaginationResponse> call;
 
         if (isLoading || currentPage > lastPage) {
             return;
@@ -82,9 +82,9 @@ public class InventoryActivity extends AppCompatActivity {
             call = ApiClient.getInstance().getItemsByUrl(url);
         }
 
-        call.enqueue(new Callback<PaginationResponse>() {
+        call.enqueue(new Callback<ProductPaginationResponse>() {
             @Override
-            public void onResponse(Call<PaginationResponse> call, Response<PaginationResponse> response) {
+            public void onResponse(Call<ProductPaginationResponse> call, Response<ProductPaginationResponse> response) {
                 isLoading = false;
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -93,7 +93,7 @@ public class InventoryActivity extends AppCompatActivity {
                     lastPage = paginationResponse.getMeta().getLast_page();
 
                     setUpInventoryItemModel();
-                    adapter.notifyItemInserted(0);
+                    adapter.notifyDataSetChanged();
 //                    logInventoryItems();
 
                     recyclerView.setHasFixedSize(true);// Optional but good practice
@@ -105,7 +105,7 @@ public class InventoryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<PaginationResponse> call, Throwable t) {
+            public void onFailure(Call<ProductPaginationResponse> call, Throwable t) {
                 Log.e("InventoryActivity", "API call failed.", t);
             }
         });

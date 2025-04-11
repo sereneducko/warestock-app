@@ -2,7 +2,7 @@ package com.example.stockapp;
 
 import java.util.List;
 
-public class PaginationResponse {
+public class ProductPaginationResponse {
 
     public List<ProductResponse> data;
     public LinkResponse links;
